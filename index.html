@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>フードパントリー ポイント（試作）</title>
+</head>
+<body>
+  <h1>フードパントリー ポイント（試作）</h1>
+
+  <p id="message" role="status"></p>
+
+  <section aria-labelledby="balance-heading">
+    <h2 id="balance-heading">残りポイント</h2>
+    <p aria-live="polite">残り <strong id="balance">0</strong> ポイント</p>
+  </section>
+
+  <section aria-labelledby="ranks-heading">
+    <h2 id="ranks-heading">交換する</h2>
+    <div id="ranks"></div>
+  </section>
+
+  <section aria-labelledby="history-heading">
+    <h2 id="history-heading">履歴</h2>
+    <ul id="history"></ul>
+  </section>
+
+  <script src="rules.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
