@@ -1,0 +1,77 @@
+/* 見た目の指定（タスク6：スマホで使いやすくする）
+   デザインの仕上げ（色の工夫やロゴ）はしない。読みやすさと押しやすさだけを整える。 */
+
+body {
+  max-width: 32rem;          /* パソコンで横に広がりすぎないように */
+  margin: 0 auto;
+  padding: 0 16px 32px;      /* 左右に16pxの余白 */
+  font-family: system-ui, "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #ffffff;
+}
+
+h1 {
+  font-size: 1.4rem;
+  margin: 16px 0 8px;
+}
+
+h2 {
+  font-size: 1.1rem;
+  margin: 20px 0 8px;
+}
+
+/* 残りポイントの数字を大きく */
+#balance {
+  font-size: 2.5rem;
+}
+
+/* お知らせは枠で囲む。お知らせがないときは枠ごと隠す */
+#message {
+  margin: 12px 0;
+  padding: 12px;
+  border: 2px solid #1a1a1a;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+#message:empty {
+  display: none;
+}
+
+/* 交換ボタンは2列に並べ、指で押しやすい高さにする */
+#ranks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+#ranks button {
+  min-height: 48px;
+  padding: 8px;
+  font: inherit;
+  font-size: 1rem;
+  color: #1a1a1a;
+  background: #f2f2f2;
+  border: 2px solid #333333;
+  border-radius: 8px;
+}
+
+#ranks button:active {
+  background: #dddddd;
+}
+
+/* キーボードで選んでいるボタンがわかるように */
+#ranks button:focus-visible {
+  outline: 3px solid #0050b3;
+  outline-offset: 2px;
+}
+
+#history {
+  padding-left: 1.2em;
+}
+
+#history li {
+  margin: 4px 0;
+}
