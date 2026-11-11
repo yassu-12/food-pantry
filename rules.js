@@ -11,11 +11,12 @@ var RULES = {
     visit: { label: "来所", points: 150 }
   },
 
-  // 使う条件：食品のランクと、交換に必要なポイント（DECISIONS.md D-15）
+  // 使う条件：交換に必要なポイント。棚の表示（0・100・200・300）に合わせた（DECISIONS.md D-29）
+  // 画面には「ランク」という言葉を出さず、点数だけを表示する（D-28）。
   spend: [
-    { label: "ランク0", points: 0 },
-    { label: "ランク1", points: 50 },
-    { label: "ランク2", points: 100 },
-    { label: "ランク3", points: 200 }
+    { points: 0 },
+    { points: 100 },
+    { points: 200 },
+    { points: 300 }
   ]
 };

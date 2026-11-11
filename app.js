@@ -3,6 +3,8 @@
 // タスク2：URLに「?get=○○」が付いていたら、その条件のポイントを加える。
 // タスク3：ランクのボタンを押すと、そのポイントを使って交換する。足りないときは交換しない。
 // タスク4：残りと履歴をこのブラウザの中（ローカルストレージ）に保存する。外部には送らない。
+// タスク7：画面に「ランク」という言葉を出さず、点数だけで表示する。
+// （コードの中の rank や ranks という名前は、画面には出ない。変更を小さくするため、そのままにしている）
 
 var STORAGE_KEY = "foodPantryPoints.v1";  // ブラウザの中の保存場所の名前
 var canSave = true;                        // 保存できない環境では false になる
@@ -78,7 +80,7 @@ function spendPoints(rank) {
     state.message = "ポイントが足りません（あと" + (rank.points - state.balance) + "ポイント必要）";
     return;
   }
-  addPoints(rank.label + "と交換", -rank.points);
+  addPoints("食品と交換", -rank.points);
   state.message = rank.points + "ポイント使いました";
 }
 
@@ -88,7 +90,7 @@ function setupRankButtons() {
   RULES.spend.forEach(function (rank) {
     var button = document.createElement("button");
     button.type = "button";
-    button.textContent = rank.label + "（" + rank.points + "ポイント）";
+    button.textContent = rank.points + "ポイント";  // 点数だけを表示する（D-28）
     button.addEventListener("click", function () {
       spendPoints(rank);
       saveState();
