@@ -10,7 +10,7 @@
   <h1>フードパントリー ポイント（試作）</h1>
 
   <section class="balance-card" aria-labelledby="balance-heading">
-    <h2 id="balance-heading">残りポイント</h2>
+    <h2 id="balance-heading">残り</h2>
     <p class="balance-line" aria-live="polite"><strong id="balance">0</strong> ポイント</p>
     <p class="hint">掲示のQRコードをスマホのカメラで読むと、ポイントがもらえます</p>
   </section>
@@ -18,13 +18,14 @@
   <p id="message" role="status"></p>
 
   <section aria-labelledby="ranks-heading">
-    <h2 id="ranks-heading">食品と交換する</h2>
+    <h2 id="ranks-heading">ポイントを使う</h2>
     <div id="ranks"></div>
   </section>
 
   <section aria-labelledby="history-heading">
     <h2 id="history-heading">履歴</h2>
     <ul id="history"></ul>
+    <button type="button" id="history-toggle" hidden></button>
   </section>
 
   <script src="rules.js"></script>

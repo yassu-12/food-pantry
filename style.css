@@ -47,6 +47,7 @@ h2 {
   color: #ffffff;
   border-radius: var(--radius);
   padding: 14px 16px;
+  text-align: center;  /* 残りポイントを真ん中に置き、数字が回るときに目立つようにする（生徒Kの希望） */
 }
 
 .balance-card h2 {
@@ -64,6 +65,11 @@ h2 {
 #balance {
   font-size: 2.5rem;
   line-height: 1.2;
+  font-variant-numeric: tabular-nums;  /* 数字を同じ幅にして、回っている間に横にゆれないようにする（タスク16） */
+  /* 数字の欄を4桁分の幅に固定し、右にそろえる。数字が回ったり桁が減ったりしても、右の「ポイント」の文字が動かない */
+  display: inline-block;
+  min-width: 4.2ch;
+  text-align: right;
 }
 
 .balance-card .hint {
@@ -108,8 +114,34 @@ h2 {
   border-radius: var(--radius);
 }
 
+#ranks button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 #ranks button:active {
   background: var(--accent-light);
+}
+
+/* 足りないボタン（タスク14）。色だけに頼らず、点線の枠と「あと○」の文字でもわかるようにする */
+#ranks button[aria-disabled="true"] {
+  color: var(--text-sub);
+  border: 2px dashed #b4b2a9;
+  font-weight: normal;
+}
+
+#ranks button[aria-disabled="true"]:active {
+  background: #ffffff;
+}
+
+#ranks .rank-note {
+  font-size: 0.75rem;
+}
+
+#ranks .rank-note:empty {
+  display: none;
 }
 
 /* キーボードで選んでいるボタンがわかるように */
@@ -126,8 +158,55 @@ h2 {
   border-top: 1px solid var(--line);
 }
 
+/* 履歴の1行：日時・内容・点数（タスク15）。点数は右端にそろえる */
 #history li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
   padding: 8px 2px;
   border-bottom: 1px solid var(--line);
   font-size: 0.9rem;
+}
+
+#history .history-time {
+  color: var(--text-sub);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+#history .history-label {
+  flex: 1;
+}
+
+#history .history-amount {
+  white-space: nowrap;
+}
+
+/* もらった点数はオレンジの太字（「+」の記号も付いている） */
+#history .history-amount.plus {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+/* 「すべての履歴を見る」ボタン。指で押しやすい高さにする */
+#history-toggle {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  margin-top: var(--space);
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--accent-dark);
+  background: #ffffff;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius);
+}
+
+#history-toggle[hidden] {
+  display: none;
+}
+
+#history-toggle:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
 }
