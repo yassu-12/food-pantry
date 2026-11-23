@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>掲示用QRコード（職員用）</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* 掲示用QRコードのページだけで使う見た目（タスク12） */
+    .qr-card {
+      margin: 16px 0;
+      padding: 16px;
+      border: 2px solid #1a1a1a;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .qr-card .qr-image svg {
+      width: 100%;
+      max-width: 320px;
+      height: auto;
+    }
+    .qr-card .qr-name { font-size: 1.6rem; font-weight: bold; margin: 8px 0 0; }
+    .qr-card .qr-points { font-size: 1.3rem; margin: 0; }
+    .qr-card .qr-hint { margin: 8px 0 0; }
+    .qr-card .qr-url { font-size: 0.8rem; color: #444444; word-break: break-all; margin: 8px 0 0; }
+    #print-button {
+      min-height: 48px;
+      padding: 8px 16px;
+      font: inherit;
+      color: #1a1a1a;
+      background: #f2f2f2;
+      border: 2px solid #333333;
+      border-radius: 8px;
+    }
+    #print-button:focus-visible { outline: 3px solid #0050b3; outline-offset: 2px; }
+
+    /* 印刷するときは、説明とボタンを消して、1枚の紙に1つの活動を大きく出す */
+    /* 紙のふちを0にすると、ブラウザが付ける日時・アドレス・ページ番号（ヘッダーとフッター）が出なくなる。
+       そのかわり、ページの内側に余白を足して、QRが紙の端に寄らないようにする。 */
+    @page { margin: 0; }
+    @media print {
+      .no-print { display: none; }
+      body { max-width: none; margin: 0; padding: 1.5cm; }
+      .qr-card { border: none; page-break-after: always; break-after: page; }
+      .qr-card .qr-image svg { max-width: 14cm; }
+      .qr-card .qr-name { font-size: 2.4rem; }
+      .qr-card .qr-points { font-size: 2rem; }
+      /* QRの中身のアドレスは、画面で確かめるためのもの。紙には出さない（BUGS.md の B2） */
+      .qr-card .qr-url { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="no-print">
+    <h1>掲示用QRコード（職員用）</h1>
+    <p>rules.js に書いてある「ポイントをもらう」活動のQRコードです。印刷して、活動の場所に貼ってください。</p>
+    <p><button type="button" id="print-button">印刷する</button></p>
+  </div>
+
+  <div id="qr-list"></div>
+
+  <script src="rules.js"></script>
+  <script src="vendor/qrcode.js"></script>
+  <script src="qr.js"></script>
+</body>
+</html>

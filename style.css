@@ -1,5 +1,21 @@
-/* 見た目の指定（タスク6：スマホで使いやすくする）
-   デザインの仕上げ（色の工夫やロゴ）はしない。読みやすさと押しやすさだけを整える。 */
+/* 見た目の指定
+   タスク6：スマホで使いやすくする（文字の大きさ、ボタンの高さ48px以上、2列）。
+   タスク13：見た目をそろえる（オレンジの案、2026-11-24 に生徒Kが選んだ。DECISIONS.md D-34）。
+   参考にしたのは、PayPay などの「残高を一番上に大きく出す」形だけ。色・ロゴ・名前はまねしない。 */
+
+/* ここで色・余白・角の丸みを1か所にまとめる。色を変えるときは、ここだけを直す。 */
+:root {
+  --accent: #993C1D;        /* アクセント（濃いオレンジ）。白い文字が読める濃さ */
+  --accent-dark: #712B13;   /* 見出しの文字、カードの中の帯 */
+  --accent-light: #FAECE7;  /* お知らせの背景 */
+  --accent-line: #F0997B;   /* お知らせの枠 */
+  --text: #1d1d1f;          /* 本文 */
+  --text-sub: #6f6e69;      /* 日時など、補足の文字 */
+  --line: #e4e2da;          /* 区切り線 */
+  --focus: #0b57d0;         /* キーボードで選んでいる場所の枠（どの色の上でも見えるように青） */
+  --space: 12px;            /* 基本の間隔 */
+  --radius: 12px;           /* 角の丸み */
+}
 
 body {
   max-width: 32rem;          /* パソコンで横に広がりすぎないように */
@@ -8,31 +24,64 @@ body {
   font-family: system-ui, "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
   font-size: 18px;
   line-height: 1.6;
-  color: #1a1a1a;
+  color: var(--text);
   background: #ffffff;
 }
 
+/* 文字の階層：アプリ名（h1）> 区切りの見出し（h2）> 本文 */
 h1 {
-  font-size: 1.4rem;
-  margin: 16px 0 8px;
+  font-size: 1.1rem;
+  color: var(--accent-dark);
+  margin: 16px 0 var(--space);
 }
 
 h2 {
-  font-size: 1.1rem;
+  font-size: 1rem;
+  color: var(--accent-dark);
   margin: 20px 0 8px;
 }
 
-/* 残りポイントの数字を大きく */
-#balance {
-  font-size: 2.5rem;
+/* 残りポイントのカード（一番上に大きく） */
+.balance-card {
+  background: var(--accent);
+  color: #ffffff;
+  border-radius: var(--radius);
+  padding: 14px 16px;
 }
 
-/* お知らせは枠で囲む。お知らせがないときは枠ごと隠す */
-#message {
-  margin: 12px 0;
-  padding: 12px;
-  border: 2px solid #1a1a1a;
+.balance-card h2 {
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: normal;
+  margin: 0;
+}
+
+.balance-card .balance-line {
+  margin: 0;
+  font-size: 1rem;
+}
+
+#balance {
+  font-size: 2.5rem;
+  line-height: 1.2;
+}
+
+.balance-card .hint {
+  margin: 8px 0 0;
+  padding: 6px 10px;
   border-radius: 8px;
+  background: var(--accent-dark);
+  font-size: 0.8rem;
+}
+
+/* お知らせ（もらった・使った・足りない など）。お知らせがないときは枠ごと隠す */
+#message {
+  margin: var(--space) 0;
+  padding: 10px 12px;
+  background: var(--accent-light);
+  color: var(--accent-dark);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius);
   font-weight: bold;
 }
 
@@ -44,7 +93,7 @@ h2 {
 #ranks {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: var(--space);
 }
 
 #ranks button {
@@ -52,26 +101,33 @@ h2 {
   padding: 8px;
   font: inherit;
   font-size: 1rem;
-  color: #1a1a1a;
-  background: #f2f2f2;
-  border: 2px solid #333333;
-  border-radius: 8px;
+  font-weight: bold;
+  color: var(--accent-dark);
+  background: #ffffff;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
 }
 
 #ranks button:active {
-  background: #dddddd;
+  background: var(--accent-light);
 }
 
 /* キーボードで選んでいるボタンがわかるように */
 #ranks button:focus-visible {
-  outline: 3px solid #0050b3;
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
+/* 履歴は、線で区切った一覧にする */
 #history {
-  padding-left: 1.2em;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
 }
 
 #history li {
-  margin: 4px 0;
+  padding: 8px 2px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.9rem;
 }

@@ -9,15 +9,16 @@
 <body>
   <h1>フードパントリー ポイント（試作）</h1>
 
-  <p id="message" role="status"></p>
-
-  <section aria-labelledby="balance-heading">
+  <section class="balance-card" aria-labelledby="balance-heading">
     <h2 id="balance-heading">残りポイント</h2>
-    <p aria-live="polite">残り <strong id="balance">0</strong> ポイント</p>
+    <p class="balance-line" aria-live="polite"><strong id="balance">0</strong> ポイント</p>
+    <p class="hint">掲示のQRコードをスマホのカメラで読むと、ポイントがもらえます</p>
   </section>
 
+  <p id="message" role="status"></p>
+
   <section aria-labelledby="ranks-heading">
-    <h2 id="ranks-heading">交換する</h2>
+    <h2 id="ranks-heading">食品と交換する</h2>
     <div id="ranks"></div>
   </section>
 
