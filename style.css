@@ -48,7 +48,7 @@ body {
 /* センター名（アプリ名の上に小さく。タスク21） */
 .org-name {
   margin: 16px 0 0;
-  font-size: 0.85rem;
+  font-size: 1.1rem;    /* 小さすぎて読みにくかったので大きくした（生徒Kの指摘、2026-11-25） */
   font-weight: bold;
   color: var(--text);   /* 薄いと見えにくかったので、本文と同じ濃さにした（生徒Kの指摘） */
 }
@@ -74,6 +74,12 @@ body {
 
 .top-bar .org-name {
   margin: 0;
+  white-space: nowrap;   /* センター名の途中で折り返さない */
+}
+
+/* 画面が狭いスマホでは、「使い方」「FAQ」をセンター名の下の段に回す */
+.top-bar {
+  flex-wrap: wrap;
 }
 
 .top-bar + h1 {
@@ -84,6 +90,7 @@ body {
   display: flex;
   gap: 6px;
   flex-shrink: 0;
+  margin-left: auto;     /* 下の段に回ったときも、右にそろえる */
 }
 
 .top-link {
