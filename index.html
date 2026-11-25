@@ -8,7 +8,14 @@
 </head>
 <body>
   <!-- センター名を入れる（タスク21、ヒアリング⑦の 1-18-c） -->
-  <p class="org-name">地域連携教育推進センター</p>
+  <!-- 一番上の段：左にセンター名、右に「使い方」と「FAQ」（下にあると見切れて気づきにくいため、生徒Kの希望） -->
+  <div class="top-bar">
+    <p class="org-name">地域連携教育推進センター</p>
+    <nav class="top-links" aria-label="使い方とよくある質問">
+      <button type="button" id="welcome-open" class="top-link">使い方</button>
+      <a class="top-link" href="help.html">FAQ</a>
+    </nav>
+  </div>
   <h1>フードパントリー ポイント（試作）</h1>
 
   <section class="balance-card" aria-labelledby="balance-heading">
@@ -32,7 +39,6 @@
   </section>
 
   <footer class="credit">
-    <p><button type="button" id="welcome-open" class="link-button">使い方をもう一度見る</button></p>
     <p>制作：yass</p>
   </footer>
 
@@ -41,7 +47,7 @@
     <div class="welcome-panel">
       <div class="welcome-stripe"></div>
       <div class="welcome-slides" id="welcome-slides">
-        <section class="welcome-slide" aria-label="1枚目（3枚中）">
+        <section class="welcome-slide" aria-label="1枚目（5枚中）">
           <div class="welcome-art" aria-hidden="true">
             <!-- 17色の長方形を、まん中から外へ、長さをばらばらにして並べる（生徒Kの案。SDGs の公式マークとは違う形、D-41） -->
             <svg class="welcome-burst" viewBox="-60 -60 120 120" width="120" height="120">
@@ -62,13 +68,17 @@
               <rect x="-4" y="-47" width="8" height="15" fill="#56C02B" transform="rotate(296.47)"/>
               <rect x="-4" y="-49" width="8" height="17" fill="#00689D" transform="rotate(317.65)"/>
               <rect x="-4" y="-44" width="8" height="12" fill="#19486A" transform="rotate(338.82)"/>
-              <text x="0" y="0" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="bold" fill="#712B13">ようこそ</text>
             </svg>
           </div>
           <h2 id="welcome-title">ようこそ</h2>
-          <p>地域連携教育推進センター<br>フードパントリーのポイントです。</p>
+          <!-- 担当者Sの絵が、吹き出しで話しかける（タスク23、生徒Kが選んだ案C。絵は本人の了承の範囲で使う、D-40） -->
+          <div class="welcome-talk">
+            <img src="images/s-wave.png" alt="" class="welcome-chara" width="96" height="96">
+            <p class="welcome-bubble">地域連携教育推進センター<br>フードパントリーのポイントアプリです。</p>
+          </div>
         </section>
-        <section class="welcome-slide" aria-label="2枚目（3枚中）">
+        <!-- 2〜5枚目：使い方の4つの手順（FAQのページにあった「使い方」を、こちらに移した。生徒Kの希望） -->
+        <section class="welcome-slide" aria-label="2枚目（5枚中）">
           <div class="welcome-art" aria-hidden="true">
             <svg viewBox="0 0 64 64" width="88" height="88">
               <rect x="6" y="6" width="18" height="18" rx="2" fill="none" stroke="#712B13" stroke-width="4"/>
@@ -83,19 +93,38 @@
               <rect x="50" y="50" width="8" height="8" fill="#E5243B"/>
             </svg>
           </div>
-          <h2>ポイントをもらう</h2>
-          <p>活動の場所に貼ってあるQRコードを、<br>スマホのカメラで読むと、<br>ポイントがもらえます。</p>
+          <h2><span class="welcome-step">1</span>ポイントをもらう</h2>
+          <p>活動の場所に貼ってあるQRコードを、スマホのカメラで読みます。読むとこの画面が開き、ポイントが増えます。</p>
         </section>
-        <section class="welcome-slide" aria-label="3枚目（3枚中）">
+        <section class="welcome-slide" aria-label="3枚目（5枚中）">
+          <div class="welcome-art" aria-hidden="true"><span class="welcome-sample-tag">100</span></div>
+          <h2><span class="welcome-step">2</span>食品を選ぶ</h2>
+          <p>フードパントリーの棚から、ほしい食品を選びます。食品には、交換に使う点数が書いてあります。</p>
+        </section>
+        <section class="welcome-slide" aria-label="4枚目（5枚中）">
           <div class="welcome-art" aria-hidden="true"><span class="welcome-sample-button">100ポイント</span></div>
-          <h2>ポイントを使う</h2>
-          <p>食品に書いてある点数と<br>同じボタンを押すと、交換できます。<br>残りと履歴は、このスマホに記録されます。</p>
+          <h2><span class="welcome-step">3</span>ポイントを使う</h2>
+          <p>食品に書いてある点数と同じボタンを押します。「○ポイント使いました」と出たら、交換できています。</p>
+        </section>
+        <section class="welcome-slide" aria-label="5枚目（5枚中）">
+          <div class="welcome-art" aria-hidden="true">
+            <svg viewBox="0 0 64 64" width="88" height="88">
+              <rect x="8" y="18" width="48" height="34" rx="6" fill="none" stroke="#712B13" stroke-width="4"/>
+              <rect x="22" y="10" width="20" height="10" rx="3" fill="#712B13"/>
+              <circle cx="32" cy="35" r="10" fill="none" stroke="#712B13" stroke-width="4"/>
+              <circle cx="48" cy="26" r="3" fill="#FD6925"/>
+            </svg>
+          </div>
+          <h2><span class="welcome-step">4</span>受け取りを記録する</h2>
+          <p>受け取る食品と学生証を、パントリーにある iPad で撮影して記録します。</p>
         </section>
       </div>
       <div class="welcome-dots" id="welcome-dots">
         <button type="button" class="welcome-dot" aria-label="1枚目を見る"></button>
         <button type="button" class="welcome-dot" aria-label="2枚目を見る"></button>
         <button type="button" class="welcome-dot" aria-label="3枚目を見る"></button>
+        <button type="button" class="welcome-dot" aria-label="4枚目を見る"></button>
+        <button type="button" class="welcome-dot" aria-label="5枚目を見る"></button>
       </div>
       <div class="welcome-bar">
         <button type="button" id="welcome-skip" class="welcome-skip">スキップ</button>

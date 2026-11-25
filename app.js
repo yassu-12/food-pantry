@@ -94,7 +94,8 @@ function handleGetFromUrl() {
 // ランクを選んで交換する。足りないときは引かずに理由を出す。
 function spendPoints(rank) {
   if (state.balance < rank.points) {
-    state.message = "ポイントが足りません（あと" + (rank.points - state.balance) + "ポイント必要）";
+    // 「（」の前で改行して、2行目に「（あと○ポイント必要）」を出す（生徒Kの希望。style.css の white-space: pre-line）
+    state.message = "ポイントが足りません\n（あと" + (rank.points - state.balance) + "ポイント必要）";
     state.messageIsError = true;
     return;
   }
