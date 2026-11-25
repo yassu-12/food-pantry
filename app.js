@@ -23,7 +23,8 @@ var rollTimer = null;                      // 回している途中のタイマ�
 var state = {
   balance: 0,   // 残りポイント
   history: [],  // もらった・使った履歴（新しいものが先頭）
-  message: ""   // 画面に出すお知らせ（保存しない）
+  message: "",  // 画面に出すお知らせ（保存しない）
+  messageIsError: false  // お知らせが失敗のときは true（赤系で出す。タスク17）
 };
 
 // 保存してある残りと履歴を読み込む。保存がない・読めないときは false を返す。
@@ -77,8 +78,10 @@ function handleGetFromUrl() {
   if (rule) {
     addPoints(rule.label, rule.points);
     state.message = rule.points + "ポイントもらいました";
+    state.messageIsError = false;
   } else {
     state.message = "このQRコードは使えません";
+    state.messageIsError = true;
   }
 
   // 再読み込みで二重に加わらないよう、アドレスから印を消す。
@@ -92,10 +95,12 @@ function handleGetFromUrl() {
 function spendPoints(rank) {
   if (state.balance < rank.points) {
     state.message = "ポイントが足りません（あと" + (rank.points - state.balance) + "ポイント必要）";
+    state.messageIsError = true;
     return;
   }
   addPoints("交換", -rank.points);  // 食品以外と交換することもあるので「食品」とは書かない
   state.message = rank.points + "ポイント使いました";
+  state.messageIsError = false;
 }
 
 // 交換ボタンを rules.js のランクから作る（開いたときに1回だけ）
@@ -142,8 +147,14 @@ function updateRankButtons() {
 function render() {
   var notes = [state.message];
   if (!canSave) notes.push("この端末では保存できません");
-  document.getElementById("message").textContent = notes.filter(Boolean).join("　");
-  if (rollOnNextRender) {
+  var messageEl = document.getElementById("message");
+  messageEl.textContent = notes.filter(Boolean).join("　");
+  // 失敗のお知らせ（足りない・使えない・保存できない）は赤系にする（タスク17）
+  messageEl.classList.toggle("is-error", state.messageIsError || !canSave);
+  // できたお知らせ（もらった・使った）は緑にする（生徒Kの希望）
+  messageEl.classList.toggle("is-success", Boolean(state.message) && !state.messageIsError && canSave);
+  if (rollOnNextRender && !welcomeIsOpen) {
+    // ようこそ画面が出ている間は回さず、閉じたときに回す（タスク19）
     rollOnNextRender = false;
     rollBalance(state.balance);
   } else {
@@ -244,11 +255,16 @@ function renderHistory() {
     var amount = document.createElement("span");
     if (item.amount > 0) {
       amount.className = "history-amount plus";
-      amount.textContent = "+" + item.amount + " ポイント";
+      amount.textContent = "+" + item.amount;
     } else {
       amount.className = "history-amount";
-      amount.textContent = item.amount + " ポイント";
+      amount.textContent = String(item.amount);
     }
+    // 単位の「ポイント」は小さく、薄く出す（タスク17）
+    var unit = document.createElement("span");
+    unit.className = "history-unit";
+    unit.textContent = "ポイント";
+    amount.appendChild(unit);
 
     li.appendChild(time);
     li.appendChild(label);
@@ -283,12 +299,132 @@ function formatTime(date) {
     two(date.getHours()) + ":" + two(date.getMinutes());
 }
 
-// 初回の500ポイントは、保存がないときだけ加える
-if (!loadState()) {
+// ---- ようこそ画面（タスク19） ----
+// 初めて開いたときだけ、3枚の説明を出す。左右のスワイプ、下の点（ページコントロール）、「次へ」で進む。
+// スワイプはブラウザの横スクロール（1枚ずつ止まる仕組み）で行い、新しい部品は使わない。
+var welcomeIsOpen = false;
+var welcomeIndex = 0;
+var welcomeOpener = null;   // 閉じたあとに、キーボードの位置を戻す先
+
+function welcomeSlideCount() {
+  return document.querySelectorAll("#welcome-slides .welcome-slide").length;
+}
+
+// i 枚目を出す。点と「次へ」の文字も合わせる
+function showWelcomeSlide(i, smooth) {
+  var slides = document.getElementById("welcome-slides");
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  welcomeIndex = i;
+  slides.scrollTo({ left: i * slides.clientWidth, behavior: (smooth && !reduceMotion) ? "smooth" : "auto" });
+  updateWelcomeControls();
+}
+
+function updateWelcomeControls() {
+  var dots = document.querySelectorAll("#welcome-dots .welcome-dot");
+  for (var k = 0; k < dots.length; k++) {
+    if (k === welcomeIndex) {
+      dots[k].setAttribute("aria-current", "step");
+    } else {
+      dots[k].removeAttribute("aria-current");
+    }
+  }
+  var last = welcomeIndex === welcomeSlideCount() - 1;
+  document.getElementById("welcome-next").textContent = last ? "はじめる" : "次へ";
+}
+
+function openWelcome(opener) {
+  welcomeOpener = opener || null;
+  welcomeIsOpen = true;
+  document.getElementById("welcome").hidden = false;
+  document.body.classList.add("welcome-open");  // うしろの画面がスクロールしないようにする
+  showWelcomeSlide(0, false);
+  document.getElementById("welcome-next").focus();
+}
+
+function closeWelcome() {
+  welcomeIsOpen = false;
+  document.getElementById("welcome").hidden = true;
+  document.body.classList.remove("welcome-open");
+  if (rollOnNextRender) {
+    // 初めて開いたとき：閉じたあとに残りの数字を回す（タスク16）
+    rollOnNextRender = false;
+    rollBalance(state.balance);
+  }
+  if (welcomeOpener) {
+    welcomeOpener.focus();
+  } else {
+    // 初めて開いたとき：キーボードの位置を、残りポイントの見出しに移す（隠れたボタンに残らないように）
+    var heading = document.getElementById("balance-heading");
+    heading.setAttribute("tabindex", "-1");
+    heading.focus();
+  }
+}
+
+function setupWelcome() {
+  var slides = document.getElementById("welcome-slides");
+  var dots = document.querySelectorAll("#welcome-dots .welcome-dot");
+
+  // スワイプしたら、今の位置に合わせて点を動かす
+  slides.addEventListener("scroll", function () {
+    var i = Math.round(slides.scrollLeft / slides.clientWidth);
+    if (i !== welcomeIndex) {
+      welcomeIndex = i;
+      updateWelcomeControls();
+    }
+  });
+
+  for (var k = 0; k < dots.length; k++) {
+    (function (i) {
+      dots[i].addEventListener("click", function () { showWelcomeSlide(i, true); });
+    })(k);
+  }
+
+  document.getElementById("welcome-next").addEventListener("click", function () {
+    if (welcomeIndex < welcomeSlideCount() - 1) {
+      showWelcomeSlide(welcomeIndex + 1, true);
+    } else {
+      closeWelcome();
+    }
+  });
+  document.getElementById("welcome-skip").addEventListener("click", closeWelcome);
+
+  // Esc キーで閉じる。Tab キーは、ようこそ画面の中だけを回るようにする
+  document.getElementById("welcome").addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      closeWelcome();
+      return;
+    }
+    if (event.key === "Tab") {
+      var buttons = document.querySelectorAll("#welcome button");
+      var first = buttons[0];
+      var lastButton = buttons[buttons.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        lastButton.focus();
+      } else if (!event.shiftKey && document.activeElement === lastButton) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+  });
+
+  // 画面の下の「使い方をもう一度見る」
+  var again = document.getElementById("welcome-open");
+  again.addEventListener("click", function () { openWelcome(again); });
+}
+
+// 初回の500ポイントは、保存がないときだけ加える。そのときだけ、ようこそ画面も出す（タスク19）
+var isFirstVisit = !loadState();
+if (isFirstVisit) {
   addPoints("初回", RULES.initialPoints);
 }
 handleGetFromUrl();
 saveState();
 setupRankButtons();
 setupHistoryToggle();
+setupWelcome();
+if (isFirstVisit && canSave) {
+  // 保存できない端末では毎回「初めて」になるので、ようこそ画面は出さない
+  openWelcome(null);
+}
 render();

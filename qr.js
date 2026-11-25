@@ -32,18 +32,20 @@ function makeCard(code, rule, index) {
     title: { text: rule.label + "（" + rule.points + "ポイント）のQRコード", id: "qr-title-" + index }
   });
 
-  // 一番大きく「〇ポイントもらえます」、その下に小さく名前（来所・活動に参加）を出す（D-31）
+  // 一番大きく「〇ポイント」、その下に小さく名前（来所・活動に参加）を出す（D-31）
+  // 「もらえます」と「スマホのカメラで読んでください」は、画面がうるさくなるので出さない（生徒K、2026-11-25）
   var name = document.createElement("p");
   name.className = "qr-name";
-  name.textContent = rule.points + "ポイントもらえます";
+  name.textContent = rule.points + "ポイント";
 
   var points = document.createElement("p");
   points.className = "qr-points";
   points.textContent = rule.label;
 
-  var hint = document.createElement("p");
-  hint.className = "qr-hint";
-  hint.textContent = "スマホのカメラで読んでください";
+  // 掲示物にもセンター名を入れる（タスク21）
+  var org = document.createElement("p");
+  org.className = "qr-org";
+  org.textContent = "地域連携教育推進センター　フードパントリー";
 
   var address = document.createElement("p");
   address.className = "qr-url";
@@ -52,7 +54,7 @@ function makeCard(code, rule, index) {
   card.appendChild(image);
   card.appendChild(name);
   card.appendChild(points);
-  card.appendChild(hint);
+  card.appendChild(org);
   card.appendChild(address);
   return card;
 }

@@ -1,7 +1,9 @@
 /* 見た目の指定
    タスク6：スマホで使いやすくする（文字の大きさ、ボタンの高さ48px以上、2列）。
    タスク13：見た目をそろえる（オレンジの案、2026-11-24 に生徒Kが選んだ。DECISIONS.md D-34）。
-   参考にしたのは、PayPay などの「残高を一番上に大きく出す」形だけ。色・ロゴ・名前はまねしない。 */
+   参考にしたのは、PayPay などの「残高を一番上に大きく出す」形だけ。色・ロゴ・名前はまねしない。
+   タスク17（その1）：書体は増やさず、太さと色で「機械っぽさ」を減らす（2026-11-25、生徒Kが選んだ）。
+   PayPay App Style Guide の考え方（文字色を段階に分ける、単位を小さくする、失敗は赤系）を参考にした。色の値はまねしない。 */
 
 /* ここで色・余白・角の丸みを1か所にまとめる。色を変えるときは、ここだけを直す。 */
 :root {
@@ -9,8 +11,22 @@
   --accent-dark: #712B13;   /* 見出しの文字、カードの中の帯 */
   --accent-light: #FAECE7;  /* お知らせの背景 */
   --accent-line: #F0997B;   /* お知らせの枠 */
-  --text: #1d1d1f;          /* 本文 */
-  --text-sub: #6f6e69;      /* 日時など、補足の文字 */
+  --text: #2b2926;          /* 本文（真っ黒にしない、少しやわらかい黒） */
+  --text-sub: #5f5d59;      /* 補足の文字（単位の「ポイント」など） */
+  --text-faint: #75736e;    /* 日時など、一番弱い文字（白の上で読める濃さは残す） */
+  --error: #A32D2D;         /* 失敗のお知らせの文字（「足りません」など） */
+  --error-light: #FCEBEB;   /* 失敗のお知らせの背景 */
+  --error-line: #F09595;    /* 失敗のお知らせの枠 */
+  --success: #27500A;       /* できたお知らせの文字（「もらいました」「使いました」） */
+  --success-light: #EAF3DE; /* できたお知らせの背景 */
+  --success-line: #97C459;  /* できたお知らせの枠 */
+  /* SDGs の17色の帯（タスク18、D-41）。色の雰囲気だけを取り入れ、SDGs のロゴやアイコンは使わない */
+  --sdgs-stripe: linear-gradient(90deg,
+    #E5243B 0 5.88%, #DDA63A 5.88% 11.76%, #4C9F38 11.76% 17.65%, #C5192D 17.65% 23.53%,
+    #FF3A21 23.53% 29.41%, #26BDE2 29.41% 35.29%, #FCC30B 35.29% 41.18%, #A21942 41.18% 47.06%,
+    #FD6925 47.06% 52.94%, #DD1367 52.94% 58.82%, #FD9D24 58.82% 64.71%, #BF8B2E 64.71% 70.59%,
+    #3F7E44 70.59% 76.47%, #0A97D9 76.47% 82.35%, #56C02B 82.35% 88.24%, #00689D 88.24% 94.12%,
+    #19486A 94.12% 100%);
   --line: #e4e2da;          /* 区切り線 */
   --focus: #0b57d0;         /* キーボードで選んでいる場所の枠（どの色の上でも見えるように青） */
   --space: 12px;            /* 基本の間隔 */
@@ -29,6 +45,18 @@ body {
 }
 
 /* 文字の階層：アプリ名（h1）> 区切りの見出し（h2）> 本文 */
+/* センター名（アプリ名の上に小さく。タスク21） */
+.org-name {
+  margin: 16px 0 0;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: var(--text);   /* 薄いと見えにくかったので、本文と同じ濃さにした（生徒Kの指摘） */
+}
+
+.org-name + h1 {
+  margin-top: 2px;
+}
+
 h1 {
   font-size: 1.1rem;
   color: var(--accent-dark);
@@ -42,16 +70,40 @@ h2 {
 }
 
 /* 残りポイントのカード（一番上に大きく） */
+/* 画面の一番上に、SDGs の17色の細い帯を出す（タスク18）。飾りなので、読み上げには関係しない */
+body::before {
+  content: "";
+  display: block;
+  height: 6px;
+  margin: 0 -16px;
+  background: var(--sdgs-stripe);
+}
+
+/* 残りポイントのカード：まわりを SDGs の17色にし、文字のまわりだけを白く抜く（生徒Kが選んだ案2、タスク18） */
 .balance-card {
-  background: var(--accent);
-  color: #ffffff;
+  background: var(--sdgs-stripe);
+  color: var(--text);
   border-radius: var(--radius);
-  padding: 14px 16px;
+  padding: 16px 10px;         /* 白い部分のまわりに見える色の幅。左右は狭くして、白を広くとる */
   text-align: center;  /* 残りポイントを真ん中に置き、数字が回るときに目立つようにする（生徒Kの希望） */
 }
 
+/* 文字のまわりの白い部分（左右いっぱいに広げる） */
+.balance-inner {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+/* 印刷するとき（qr.html の掲示物）は、一番上の帯を出さない（1枚目だけに出てしまうため） */
+@media print {
+  body::before {
+    display: none;
+  }
+}
+
 .balance-card h2 {
-  color: #ffffff;
+  color: var(--text-sub);
   font-size: 0.85rem;
   font-weight: normal;
   margin: 0;
@@ -60,6 +112,11 @@ h2 {
 .balance-card .balance-line {
   margin: 0;
   font-size: 1rem;
+  color: var(--text-sub);   /* 「ポイント」の文字。数字は下で濃くする */
+}
+
+.balance-card #balance {
+  color: var(--text);
 }
 
 #balance {
@@ -70,14 +127,6 @@ h2 {
   display: inline-block;
   min-width: 4.2ch;
   text-align: right;
-}
-
-.balance-card .hint {
-  margin: 8px 0 0;
-  padding: 6px 10px;
-  border-radius: 8px;
-  background: var(--accent-dark);
-  font-size: 0.8rem;
 }
 
 /* お知らせ（もらった・使った・足りない など）。お知らせがないときは枠ごと隠す */
@@ -93,6 +142,20 @@ h2 {
 
 #message:empty {
   display: none;
+}
+
+/* 失敗のお知らせ（「足りません」「使えません」など）は赤系にして、成功と見分けられるようにする（タスク17） */
+/* できたお知らせ（「もらいました」「使いました」）は緑にして、失敗（赤）とはっきり見分けられるようにする（生徒Kの希望） */
+#message.is-success {
+  background: var(--success-light);
+  color: var(--success);
+  border-color: var(--success-line);
+}
+
+#message.is-error {
+  background: var(--error-light);
+  color: var(--error);
+  border-color: var(--error-line);
 }
 
 /* 交換ボタンは2列に並べ、指で押しやすい高さにする */
@@ -123,6 +186,18 @@ h2 {
 
 #ranks button:active {
   background: var(--accent-light);
+}
+
+/* ボタンが 100・200・300 の3つになったので、同じ大きさで横に3つ並べる（タスク20）。
+   1つだけ大きいと、目立つボタンを押し間違えやすくなるため（生徒Kの指摘） */
+#ranks {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+#ranks button {
+  padding: 8px 4px;
+  font-size: 0.95rem;
 }
 
 /* 足りないボタン（タスク14）。色だけに頼らず、点線の枠と「あと○」の文字でもわかるようにする */
@@ -166,11 +241,16 @@ h2 {
   padding: 8px 2px;
   border-bottom: 1px solid var(--line);
   font-size: 0.9rem;
+  /* 履歴は中くらいの太さ（Medium）にして、細くて機械っぽい印象を減らす（タスク17）。
+     Windows では、Medium の太さがある「游ゴシック」を先に使う。iPhone はヒラギノ、Android は標準の文字のまま。 */
+  font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", YuGothic, system-ui, sans-serif;
+  font-weight: 500;
 }
 
 #history .history-time {
-  color: var(--text-sub);
+  color: var(--text-faint);
   font-size: 0.8rem;
+  font-weight: normal;
   white-space: nowrap;
 }
 
@@ -182,10 +262,26 @@ h2 {
   white-space: nowrap;
 }
 
+/* 履歴の単位「ポイント」は小さく、薄くして、数字を目立たせる（タスク17） */
+#history .history-unit {
+  margin-left: 2px;
+  font-size: 0.75rem;
+  font-weight: normal;
+  color: var(--text-sub);
+}
+
 /* もらった点数はオレンジの太字（「+」の記号も付いている） */
 #history .history-amount.plus {
   color: var(--accent);
   font-weight: bold;
+}
+
+/* 制作者の名前（画面の一番下に小さく） */
+.credit {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-faint);
 }
 
 /* 「すべての履歴を見る」ボタン。指で押しやすい高さにする */
@@ -207,6 +303,182 @@ h2 {
 }
 
 #history-toggle:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---- 画面の下の「使い方をもう一度見る」（タスク19） ---- */
+.credit p {
+  margin: 4px 0;
+}
+
+.link-button {
+  min-height: 44px;
+  padding: 4px 8px;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--accent-dark);
+  background: none;
+  border: none;
+  text-decoration: underline;
+}
+
+.link-button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---- ようこそ画面（タスク19） ---- */
+/* 開いている間は、うしろの画面をスクロールさせない */
+body.welcome-open {
+  overflow: hidden;
+}
+
+.welcome {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.welcome[hidden] {
+  display: none;
+}
+
+.welcome-panel {
+  width: 100%;
+  max-width: 26rem;
+  overflow: hidden;
+  background: #ffffff;
+  border-radius: var(--radius);
+}
+
+.welcome-stripe {
+  height: 10px;
+  background: var(--sdgs-stripe);
+}
+
+/* 横に並べた3枚を、1枚ずつ止まるようにスクロールさせる（スワイプで進める） */
+.welcome-slides {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;        /* スクロールの棒は出さない（点で位置を見せる） */
+}
+
+.welcome-slides::-webkit-scrollbar {
+  display: none;
+}
+
+.welcome-slide {
+  flex: 0 0 100%;
+  box-sizing: border-box;
+  scroll-snap-align: start;
+  padding: 24px 20px 8px;
+  text-align: center;
+}
+
+.welcome-slide h2 {
+  margin: 12px 0 8px;
+  font-size: 1.2rem;
+  color: var(--accent-dark);
+}
+
+.welcome-slide p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* 1枚ずつの上の絵（あとでキャラクターに置きかえられる場所） */
+.welcome-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 110px;
+}
+
+/* 1枚目：17色の長方形を、まん中から外へ長さをばらばらにして並べた絵（index.html の SVG） */
+.welcome-burst {
+  display: block;
+  margin: 0 auto;
+}
+
+/* 3枚目：交換のボタンの見本 */
+.welcome-sample-button {
+  padding: 10px 22px;
+  font-weight: bold;
+  color: var(--accent-dark);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+}
+
+/* ページコントロール（下の点）。PayPay App Style Guide を参考に、今のページは濃く、ほかは薄く。
+   点は小さいが、押せる範囲は 24px 以上にする */
+.welcome-dots {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 0 0;
+}
+
+.welcome-dot {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: none;
+  border: none;
+}
+
+.welcome-dot::before {
+  content: "";
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.welcome-dot[aria-current="step"]::before {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.welcome-bar {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space);
+  padding: 8px 16px 16px;
+}
+
+.welcome-bar button {
+  min-height: 48px;
+  padding: 8px 18px;
+  font: inherit;
+  font-size: 1rem;
+  border-radius: var(--radius);
+}
+
+.welcome-skip {
+  color: var(--text-sub);
+  background: #ffffff;
+  border: 1px solid var(--line);
+}
+
+.welcome-next {
+  flex: 1;
+  font-weight: bold;
+  color: #ffffff;
+  background: var(--accent);
+  border: 2px solid var(--accent);
+}
+
+.welcome-dot:focus-visible,
+.welcome-bar button:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
 }

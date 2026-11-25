@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>掲示用QRコード（職員用）</title>
+  <title>掲示用QRコード（職員用）｜地域連携教育推進センター</title>
   <link rel="stylesheet" href="style.css">
   <style>
     /* 掲示用QRコードのページだけで使う見た目（タスク12） */
@@ -21,7 +21,7 @@
     }
     .qr-card .qr-name { font-size: 1.6rem; font-weight: bold; margin: 8px 0 0; }
     .qr-card .qr-points { font-size: 1.3rem; margin: 0; }
-    .qr-card .qr-hint { margin: 8px 0 0; }
+    .qr-card .qr-org { margin: 8px 0 0; font-size: 0.85rem; color: #5f5d59; }
     .qr-card .qr-url { font-size: 0.8rem; color: #444444; word-break: break-all; margin: 8px 0 0; }
     #print-button {
       min-height: 48px;
@@ -52,12 +52,15 @@
 </head>
 <body>
   <div class="no-print">
+    <p class="org-name">地域連携教育推進センター</p>
     <h1>掲示用QRコード（職員用）</h1>
     <p>rules.js に書いてある「ポイントをもらう」活動のQRコードです。印刷して、活動の場所に貼ってください。</p>
     <p><button type="button" id="print-button">印刷する</button></p>
   </div>
 
   <div id="qr-list"></div>
+
+  <footer class="credit no-print">制作：yass</footer>
 
   <script src="rules.js"></script>
   <script src="vendor/qrcode.js"></script>
