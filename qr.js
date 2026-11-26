@@ -12,6 +12,24 @@ function appBaseUrl() {
   return url.href;
 }
 
+// QRのまわりの飾り：SDGs の17色の光（使い方の1枚目と同じ形。生徒Kが選んだ案B、2026-11-26）
+// 白い丸の中にQRを置き、光はQRの角より外にだけ出す。QRのまわりの白い余白はそのまま残すので、読み取りに影響しない。
+var BURST_COLORS = ["#E5243B", "#DDA63A", "#4C9F38", "#C5192D", "#FF3A21", "#26BDE2", "#FCC30B", "#A21942", "#FD6925",
+  "#DD1367", "#FD9D24", "#BF8B2E", "#3F7E44", "#0A97D9", "#56C02B", "#00689D", "#19486A"];
+var BURST_LENGTHS = [22, 12, 17, 9, 20, 14, 16, 24, 10, 19, 13, 18, 11, 23, 15, 17, 12];
+
+function burstSvg() {
+  // 全体は 200×200。QRは中央の 100×100（角は中心から約71）。白い丸は半径74、光は76から外へ。
+  var svg = '<svg class="qr-burst" viewBox="-100 -100 200 200" aria-hidden="true" focusable="false">';
+  BURST_COLORS.forEach(function (color, i) {
+    var length = BURST_LENGTHS[i];
+    svg += '<rect x="-5" y="' + (-76 - length) + '" width="10" height="' + length + '" rx="2" fill="' + color +
+      '" transform="rotate(' + (i * 360 / 17).toFixed(2) + ')"/>';
+  });
+  svg += '<circle r="74" fill="#ffffff"/></svg>';
+  return svg;
+}
+
 // 1つの活動のカードを作る
 function makeCard(code, rule, index) {
   var url = appBaseUrl() + "?get=" + encodeURIComponent(code);
@@ -22,6 +40,10 @@ function makeCard(code, rule, index) {
 
   var card = document.createElement("section");
   card.className = "qr-card";
+
+  var ring = document.createElement("div");
+  ring.className = "qr-ring";
+  ring.innerHTML = burstSvg();
 
   var image = document.createElement("div");
   image.className = "qr-image";
@@ -42,16 +64,17 @@ function makeCard(code, rule, index) {
   points.className = "qr-points";
   points.textContent = rule.label;
 
-  // 掲示物にもセンター名を入れる（タスク21）
+  // 掲示物にもセンター名を入れる（タスク21）。パントリーの名前「みんなの食品庫」も足した（生徒K、2026-11-26）
   var org = document.createElement("p");
   org.className = "qr-org";
-  org.textContent = "地域連携教育推進センター　フードパントリー";
+  org.textContent = "地域連携教育推進センター　フードパントリー「みんなの食品庫」";
 
   var address = document.createElement("p");
   address.className = "qr-url";
   address.textContent = url;
 
-  card.appendChild(image);
+  ring.appendChild(image);
+  card.appendChild(ring);
   card.appendChild(name);
   card.appendChild(points);
   card.appendChild(org);

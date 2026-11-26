@@ -14,9 +14,30 @@
       border-radius: 8px;
       text-align: center;
     }
-    .qr-card .qr-image svg {
+    /* QRのまわりの17色の光（案B）。光の枠の中央の半分の大きさにQRを置く */
+    .qr-ring {
+      position: relative;
       width: 100%;
-      max-width: 320px;
+      max-width: 360px;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+    }
+    .qr-ring .qr-burst {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .qr-ring .qr-image {
+      position: absolute;
+      left: 25%;
+      top: 25%;
+      width: 50%;
+      height: 50%;
+    }
+    .qr-card .qr-image svg {
+      display: block;
+      width: 100%;
       height: auto;
     }
     .qr-card .qr-name { font-size: 1.6rem; font-weight: bold; margin: 8px 0 0; }
@@ -34,17 +55,37 @@
     }
     #print-button:focus-visible { outline: 3px solid #0050b3; outline-offset: 2px; }
 
-    /* 印刷するときは、説明とボタンを消して、1枚の紙に1つの活動を大きく出す */
-    /* 紙のふちを0にすると、ブラウザが付ける日時・アドレス・ページ番号（ヘッダーとフッター）が出なくなる。
-       そのかわり、ページの内側に余白を足して、QRが紙の端に寄らないようにする。 */
-    @page { margin: 0; }
+    /* 印刷するときは、説明とボタンを消して、A4 1枚に4つ（縦2×横2、1つはA6＝はがきくらい）並べる。
+       棚が大きくないので、A4 の1/4 の大きさにした（生徒K、2026-11-26）。
+       4つの間の点線は、はさみで切るときの線。 */
+    /* 紙のふちを0にすると、ブラウザが付ける日時・アドレス・ページ番号（ヘッダーとフッター）が出なくなる。 */
+    @page { size: A4 portrait; margin: 0; }
     @media print {
       .no-print { display: none; }
-      body { max-width: none; margin: 0; padding: 1.5cm; }
-      .qr-card { border: none; page-break-after: always; break-after: page; }
-      .qr-card .qr-image svg { max-width: 14cm; }
-      .qr-card .qr-name { font-size: 2.4rem; }
-      .qr-card .qr-points { font-size: 2rem; }
+      body { max-width: none; margin: 0; padding: 0; }
+      #qr-list {
+        display: grid;
+        grid-template-columns: 10.5cm 10.5cm;
+        grid-auto-rows: 14.8cm;
+      }
+      .qr-card {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0.8cm 0.6cm;
+        border: 1px dashed #b4b2a9;
+        border-radius: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .qr-ring { width: 9cm; max-width: 9cm; }   /* QRは約4.5cm角になる */
+      .qr-ring .qr-burst { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .qr-card .qr-name { font-size: 1.6rem; margin-top: 0.2cm; }
+      .qr-card .qr-points { font-size: 1.1rem; }
+      .qr-card .qr-org { font-size: 0.7rem; }
       /* QRの中身のアドレスは、画面で確かめるためのもの。紙には出さない（BUGS.md の B2） */
       .qr-card .qr-url { display: none; }
     }

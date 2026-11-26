@@ -414,9 +414,10 @@ function setupWelcome() {
   again.addEventListener("click", function () { openWelcome(again); });
 }
 
-// 初回の500ポイントは、保存がないときだけ加える。そのときだけ、ようこそ画面も出す（タスク19）
+// 初回のポイントは、保存がないときだけ加える。そのときだけ、ようこそ画面も出す（タスク19）
+// 初回は 0 になった（D-15 の変更、2026-11-26）。0 のときは、履歴に「初回 +0」を出さない。
 var isFirstVisit = !loadState();
-if (isFirstVisit) {
+if (isFirstVisit && RULES.initialPoints > 0) {
   addPoints("初回", RULES.initialPoints);
 }
 handleGetFromUrl();
