@@ -4,7 +4,7 @@
 // このページでは app.js を読み込まないので、開いてもポイントは増えない。
 
 // アプリのページ（index.html）のアドレスを、このページのアドレスから作る。
-// 例：https://yassu-12.github.io/food-pantry/qr.html → https://yassu-12.github.io/food-pantry/
+// 例：https://yassu-12.github.io/minnano-shokuhin/qr.html → https://yassu-12.github.io/minnano-shokuhin/
 function appBaseUrl() {
   var url = new URL("./", location.href);
   url.search = "";
